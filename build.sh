@@ -68,7 +68,7 @@ case $1 in
         exit 0
         ;;
     "-t")
-        do_build_simulator
+        do_build_target
         exit 0
         ;;
     "-s")

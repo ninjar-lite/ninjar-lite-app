@@ -11,6 +11,8 @@
 #include "lvgl/demos/lv_demos.h"
 #include "lvgl/examples/lv_examples.h"
 
+#include "linux/init.h"
+
 /*******************
 *       DEFINE
 ********************/
@@ -80,13 +82,14 @@ int main(int argc, char **argv)
     app_init();
     hal_init();
 
+    system_initcalls();
     // ifconfig usb0 192.168.200.100
     // ping 192.168.200.101
     // mount -t nfs -o nolock,vers=3 192.168.200.101:/home/developer/nfs_share /mnt
     // cd /mnt && ./demo
 
     /* App here */
-    printf("Launching App ...\n");
+    printf("Loading UI ...\n");
     lv_demo_widgets();
 
     for(;;) {

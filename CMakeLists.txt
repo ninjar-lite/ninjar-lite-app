@@ -3,13 +3,14 @@ project(NINJAR-lite)
 
 # set(CMAKE_C_STANDARD 11)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
-include_directories(./)
+include_directories(. include)
 
 file(GLOB_RECURSE COMMON_INCLUDES "lvgl/*.h" "./*.h")
 
 file(GLOB_RECURSE COMMON_SOURCES "lvgl/src/*.c"
     "lvgl/demos/*.c"
     "lvgl/examples/*.c"
+    "src/*.c"
 )
 
 set(CMAKE_BUILD_TYPE "Release")
@@ -29,9 +30,11 @@ if(CROSS_COMPILE)
     message("building for target system ...")
     include(${PROJECT_SOURCE_DIR}/cmake/target.cmake)
     add_executable(demo main.c ${COMMON_SOURCES} ${INCLUDES} ${EXT_SOURCES} ${EXT_INCLUDES})
+    target_link_options(demo PRIVATE "-T${CMAKE_CURRENT_SOURCE_DIR}/arm_default.ld")
 else()
     message("building for simulator system ...")
     include(${PROJECT_SOURCE_DIR}/cmake/simulator.cmake)
     add_executable(demo main.c ${COMMON_SOURCES} ${INCLUDES} ${EXT_SOURCES} ${EXT_INCLUDES})
     target_link_libraries(demo SDL2 m)
+    target_link_options(demo PRIVATE "-T${CMAKE_CURRENT_SOURCE_DIR}/x86_default.ld")
 endif()
