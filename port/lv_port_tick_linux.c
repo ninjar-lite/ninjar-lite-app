@@ -13,7 +13,7 @@ static void *tick_thread(void *data)
     for (;;) {
         pthread_mutex_lock(&g_lvgl_tick_mutex);
         usleep(5000);
-        lv_tick_inc(5000);
+        lv_tick_inc(5);
         pthread_mutex_unlock(&g_lvgl_tick_mutex);
     }
 
