@@ -6,6 +6,8 @@ DIR_DIST_TARGET=${WORKDIR}/dist-target
 DIR_DIST_SIMULATOR=${WORKDIR}/dist-simulator
 
 function do_compile_commands() {
+    git submodule update --init
+
     if [ ! -f "${WORKDIR}/compile_commands.json" ]; then
         echo "can't find compile_commands.json"
         mkdir -p "${WORKDIR}/tmp" && pushd "${WORKDIR}/tmp"
