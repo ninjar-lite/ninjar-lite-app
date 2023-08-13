@@ -11,7 +11,7 @@ function do_compile_commands() {
     if [ ! -f "${WORKDIR}/compile_commands.json" ]; then
         echo "can't find compile_commands.json"
         mkdir -p "${WORKDIR}/tmp" && pushd "${WORKDIR}/tmp"
-        cmake -DCROSS_COMPILE=1 .. && bear -- make -j
+        cmake -DCROSS_COMPILE=1 -DCMAKE_EXPORT_COMPILE_COMMANDS=on .. -GNinja && ninja
         cp compile_commands.json "${WORKDIR}/"
         popd
         rm -rf tmp/
