@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <signal.h>
+#include <pthread.h>
 
 #include "lvgl/lvgl.h"
 #include "port/lv_port_disp.h"
@@ -12,6 +13,7 @@
 #include "lvgl/examples/lv_examples.h"
 
 #include "linux/init.h"
+#include "ui/ui.h"
 
 /*******************
 *       DEFINE
@@ -19,6 +21,8 @@
 static void app_init(void);
 static void app_exit(void);
 
+static pthread_mutex_t lvgl_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_t lvgl_tid;
 static lv_group_t *g;
 
 
@@ -75,7 +79,15 @@ static void hal_init(void)
     }
 }
 
-
+static void *lvgl_thread(void *id)
+{
+    for(;;) {
+        pthread_mutex_lock(&lvgl_mutex);
+        lv_timer_handler();
+        pthread_mutex_unlock(&lvgl_mutex);
+        usleep(5000);
+    }
+}
 
 int main(int argc, char **argv)
 {
@@ -87,15 +99,39 @@ int main(int argc, char **argv)
     // ping 192.168.200.101
     // mount -t nfs -o nolock,vers=3 192.168.200.101:/home/developer/nfs_share /mnt
     // cd /mnt && ./demo
+    pthread_create(&lvgl_tid, NULL, lvgl_thread, NULL);
 
     /* App here */
     printf("Loading UI ...\n");
-    lv_demo_widgets();
+    /* Booting up logic */
+    pthread_mutex_lock(&lvgl_mutex);
+    lv_obj_t * lottie = lv_rlottie_create_from_file(lv_scr_act(), 100, 100,
+                                                    "./first_up.json");
+    pthread_mutex_unlock(&lvgl_mutex);
 
-    for(;;) {
-        lv_timer_handler();
-        usleep(5000);
-    }
+    lv_rlottie_set_play_mode(lottie, LV_RLOTTIE_CTRL_PLAY);
+    lv_obj_center(lottie);
+
+    sleep(1);
+
+    /* TODO: replace this with anim */
+    lv_obj_del(lottie);
+
+    lv_obj_set_style_bg_color(lv_scr_act(), lv_color_black(), 0);
+
+    lv_obj_t *label = lv_label_create(lv_scr_act());
+    lv_obj_set_width(label, lv_disp_get_hor_res(NULL)-8);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
+    lv_label_set_text(label, "Booting up");
+    lv_obj_set_style_text_color(label, lv_color_white(), 0);
+    lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0);
+    lv_obj_center(label);
+
+    sleep(1);
+
+    ui_init();
+
+    for(;;);
 
     return 0;
 }

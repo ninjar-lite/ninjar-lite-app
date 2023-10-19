@@ -24,7 +24,9 @@ set(WARINGS "-Wall -Wextra \
 SET(CMAKE_C_FLAGS_RELEASE " -O3 ${WARINGS}")
 SET(CMAKE_C_FLAGS_DEBUG "-static -O3 -g ${WARINGS}")
 
-link_libraries(pthread)
+add_subdirectory(ui)
+
+link_libraries(pthread ui)
 
 if(CROSS_COMPILE)
     message("building for target system ...")
@@ -35,6 +37,6 @@ else()
     message("building for simulator system ...")
     include(${PROJECT_SOURCE_DIR}/cmake/simulator.cmake)
     add_executable(demo main.c ${COMMON_SOURCES} ${INCLUDES} ${EXT_SOURCES} ${EXT_INCLUDES})
-    target_link_libraries(demo SDL2 m)
+    target_link_libraries(demo SDL2 m rlottie)
     target_link_options(demo PRIVATE "-T${CMAKE_CURRENT_SOURCE_DIR}/x86_default.ld")
 endif()

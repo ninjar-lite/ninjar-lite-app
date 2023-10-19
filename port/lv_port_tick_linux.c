@@ -5,16 +5,13 @@
 
 #include "lv_port_tick.h"
 
-static pthread_t tid;
-static pthread_mutex_t g_lvgl_tick_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_t tick_tid;
 
 static void *tick_thread(void *data)
 {
     for (;;) {
-        pthread_mutex_lock(&g_lvgl_tick_mutex);
         usleep(5000);
         lv_tick_inc(5);
-        pthread_mutex_unlock(&g_lvgl_tick_mutex);
     }
 
     return NULL;
@@ -23,5 +20,5 @@ static void *tick_thread(void *data)
 void lv_port_tick_init()
 {
     printf("Creating sys_tick ...\n");
-    pthread_create(&tid, NULL, tick_thread, NULL);
+    pthread_create(&tick_tid, NULL, tick_thread, NULL);
 }
