@@ -19,9 +19,17 @@ void ui_ScreenHome_screen_init(void);
 extern lv_obj_t *ui_ScreenHome;
 extern lv_obj_t *ui_PanelStatus;
 extern lv_obj_t *ui_LabelBattery;
-extern lv_obj_t *ui_LabelBattery1;
+extern lv_obj_t *ui_LabelTime;
 extern lv_obj_t *ui_ButtonApp;
 extern lv_obj_t *ui_LabelApp;
+extern lv_obj_t *ui_ButtonApp1;
+extern lv_obj_t *ui_LabelApp1;
+extern lv_obj_t *ui_ButtonApp2;
+extern lv_obj_t *ui_LabelApp2;
+extern lv_obj_t *ui_ButtonApp3;
+extern lv_obj_t *ui_LabelApp3;
+extern lv_obj_t *ui_LabelWifi;
+extern lv_obj_t *ui_LabelGPS;
 extern lv_obj_t *ui____initial_actions0;
 
 

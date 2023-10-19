@@ -14,9 +14,17 @@ void ui_ScreenHome_screen_init(void);
 lv_obj_t *ui_ScreenHome;
 lv_obj_t *ui_PanelStatus;
 lv_obj_t *ui_LabelBattery;
-lv_obj_t *ui_LabelBattery1;
+lv_obj_t *ui_LabelTime;
 lv_obj_t *ui_ButtonApp;
 lv_obj_t *ui_LabelApp;
+lv_obj_t *ui_ButtonApp1;
+lv_obj_t *ui_LabelApp1;
+lv_obj_t *ui_ButtonApp2;
+lv_obj_t *ui_LabelApp2;
+lv_obj_t *ui_ButtonApp3;
+lv_obj_t *ui_LabelApp3;
+lv_obj_t *ui_LabelWifi;
+lv_obj_t *ui_LabelGPS;
 lv_obj_t *ui____initial_actions0;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////

@@ -93,16 +93,12 @@ int main(int argc, char **argv)
 {
     app_init();
     hal_init();
-
-    system_initcalls();
     // ifconfig usb0 192.168.200.100
     // ping 192.168.200.101
     // mount -t nfs -o nolock,vers=3 192.168.200.101:/home/developer/nfs_share /mnt
     // cd /mnt && ./demo
     pthread_create(&lvgl_tid, NULL, lvgl_thread, NULL);
 
-    /* App here */
-    printf("Loading UI ...\n");
     /* Booting up logic */
     pthread_mutex_lock(&lvgl_mutex);
     lv_obj_t * lottie = lv_rlottie_create_from_file(lv_scr_act(), 100, 100,
@@ -112,24 +108,31 @@ int main(int argc, char **argv)
     lv_rlottie_set_play_mode(lottie, LV_RLOTTIE_CTRL_PLAY);
     lv_obj_center(lottie);
 
-    sleep(1);
-
-    /* TODO: replace this with anim */
-    lv_obj_del(lottie);
-
-    lv_obj_set_style_bg_color(lv_scr_act(), lv_color_black(), 0);
-
+    pthread_mutex_lock(&lvgl_mutex);
     lv_obj_t *label = lv_label_create(lv_scr_act());
     lv_obj_set_width(label, lv_disp_get_hor_res(NULL)-8);
     lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
-    lv_label_set_text(label, "Booting up");
+    lv_label_set_text(label, "Loading...");
+    lv_obj_set_style_text_font(label, &ui_font_Fixedasys16, 0);
     lv_obj_set_style_text_color(label, lv_color_white(), 0);
     lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0);
-    lv_obj_center(label);
+    lv_obj_align(label, LV_ALIGN_BOTTOM_MID, 0, -10);
+    pthread_mutex_unlock(&lvgl_mutex);
 
+    system_initcalls();
     sleep(1);
 
+    /* TODO: replace this with anim */
+    pthread_mutex_lock(&lvgl_mutex);
+    lv_obj_del(lottie);
+    pthread_mutex_unlock(&lvgl_mutex);
+
+    pthread_mutex_lock(&lvgl_mutex);
     ui_init();
+    lv_label_set_text(ui_LabelBattery, LV_SYMBOL_BATTERY_FULL);
+    lv_label_set_text(ui_LabelWifi, LV_SYMBOL_WIFI);
+    lv_label_set_text(ui_LabelGPS, LV_SYMBOL_GPS);
+    pthread_mutex_unlock(&lvgl_mutex);
 
     for(;;);
 
